@@ -15,7 +15,22 @@ if (!$filesToCheck) {
 }
 else {
     foreach ($file in $filesToCheck) {
+        LogDebug "repoPath: '$repoPath'"
+
+        # Example: specification/foo/resource-manager/Microsoft.Foo/stable/2023-01-01/Foo.json
+        LogDebug "file: '$file'"
+
         LogInfo "Checking $repoPath/$file"
+
+        # ToDo: If swagger contains "x-typespec-generated", continue immediately for perf
+        
+
+        # Example: specification/foo/resource-manager/Microsoft.Foo
+        $pathToServiceName = ($file -split '/')[0..3] -join '/'
+        $urlToStableFolder = "https://github.com/Azure/azure-rest-api-specs/tree/main/$pathToServiceName/stable"
+
+        $response = Invoke-WebRequest $urlToStableFolder
+        if ($response)
 
         # ToDo: If the swagger file is in a "new service" (defined as
         # "not having a API version in a stable folder in public/main"),
